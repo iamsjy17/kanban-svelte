@@ -5,11 +5,13 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear"
+    "start": "sirv public --no-clear",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-typescript": "^8.0.0",
     "autoprefixer": "^10.4.7",
     "node-sass": "^7.0.1",
     "preprocess": "^3.2.0",
@@ -19,14 +21,18 @@
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
     "svelte": "^3.0.0",
-    "svelte-preprocess": "^4.10.7"
+    "svelte-preprocess": "^4.10.7",
+    "svelte-check": "^2.0.0",
+    "typescript": "^4.0.0",
+    "tslib": "^2.0.0",
+    "@tsconfig/svelte": "^2.0.0"
   },
   "dependencies": {
     "@rollup/plugin-alias": "^3.1.9",
     "sirv-cli": "^2.0.0"
   },
   "browserslist": [
-    "> 1%", 
-    "last 2 versions" 
+    "> 1%",
+    "last 2 versions"
   ]
 }

@@ -45,7 +45,7 @@ export default {
   },
   plugins: [
     svelte({
-      compilerOptions: {
+			compilerOptions: {
         // enable run-time checks when not in production
         dev: !production,
         css: (css) => {
@@ -59,6 +59,7 @@ export default {
         postcss: {
           plugins: [require("autoprefixer")()],
         },
+        sourceMap: !production
       }),
     }),
     // we'll extract any component CSS out into
@@ -75,6 +76,10 @@ export default {
       dedupe: ["svelte"],
     }),
     commonjs(),
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production
+		}),
 
     alias({
       entries: [{ find: "~", replacement: path.resolve(__dirname, "src/") }],
