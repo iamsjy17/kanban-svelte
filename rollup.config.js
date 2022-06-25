@@ -7,6 +7,7 @@ import css from "rollup-plugin-css-only";
 import alias from "@rollup/plugin-alias";
 import path from "path";
 import sveltePreprocess from "svelte-preprocess";
+import typescript from "@rollup/plugin-typescript";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -36,7 +37,7 @@ function serve() {
 }
 
 export default {
-  input: "src/main.js",
+  input: "src/main.ts",
   output: {
     sourcemap: true,
     format: "iife",
