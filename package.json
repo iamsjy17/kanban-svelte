@@ -7,7 +7,7 @@
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "format": "prettier --write ./src/**/*.{svelte,ts}",
+    "format": "prettier --write ./src/**/*.{svelte,ts} ./src/*.{svelte,ts}",
     "lint": "eslint './src/**/*.{ts,svelte}'",
     "lint:fix": "eslint --fix './src/**/*.{ts,svelte}'"
   },
@@ -16,6 +16,7 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "^2.0.0",
+    "@types/lodash-es": "^4.17.6",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "autoprefixer": "^10.4.7",
@@ -44,6 +45,7 @@
   },
   "dependencies": {
     "@rollup/plugin-alias": "^3.1.9",
+    "lodash-es": "^4.17.21",
     "sirv-cli": "^2.0.0"
   },
   "browserslist": [

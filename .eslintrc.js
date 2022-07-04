@@ -1,4 +1,3 @@
-
 module.exports = {
     parser: '@typescript-eslint/parser',
     extends: [
@@ -29,6 +28,8 @@ module.exports = {
       // See https://github.com/sveltejs/eslint-plugin-svelte3/issues/70
       'svelte3/ignore-styles': () => true
     },
+    rules: {'@typescript-eslint/no-unsafe-call': 0}
+,    
     plugins: ['svelte3', '@typescript-eslint'],
     ignorePatterns: ['node_modules']
   }
