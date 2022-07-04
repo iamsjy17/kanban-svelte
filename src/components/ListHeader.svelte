@@ -13,7 +13,6 @@
 
     isEditing = false;
     await lists.edit(id, title);
-    title = '';
   }
 
   async function deleteList() {

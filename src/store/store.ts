@@ -24,27 +24,23 @@ function createList() {
     },
     edit: async (id: number, title: string) => {
       const editedList = await putList(id, title);
-      const listIdx = list.findIndex(list => editedList?.id === list.id);
-
-      if (listIdx < 0) {
-        return;
-      }
 
       lists.update(_lists => {
+        const listIdx = _lists.findIndex(list => editedList?.id === list.id);
+
+        if (listIdx < 0) {
+          return _lists;
+        }
+
         _lists[listIdx] = editedList;
 
         return [..._lists];
       });
     },
     delete : async (id: number) => {
-      const deletedList = await deleteList(id);
-      const listIdx = list.findIndex(list => deletedList?.id === list.id);
+      await deleteList(id);
 
-      if (listIdx < 0) {
-        return;
-      }
-
-      lists.update(_lists => _lists.filter(list => list.id !== listIdx));
+      lists.update(_lists => _lists.filter(list => list.id !== id));
     },
   };
 }
