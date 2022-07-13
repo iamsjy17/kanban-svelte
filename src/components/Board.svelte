@@ -3,9 +3,13 @@
   import List from './List.svelte';
   import AddListButton from './AddListButton.svelte';
   import {lists} from '../store/store';
+  import {dropzone, DRAGGABLE_TYPE} from '../Draggable.ts';
+  import {getClosest} from '../util.ts';
 
   let isEditing = false;
   let title = '';
+
+  const dragType = 'list';
 
   onMount(async () => {
     await lists.loadLists();
@@ -24,7 +28,45 @@
 </script>
 
 <div class="board">
-  <div class="list-container">
+  <div
+    class="list-container dropzone"
+    use:dropzone={{
+      type: dragType,
+      onDrop: (event, startId) => {
+        const currentList = getClosest(
+          event?.target,
+          `[${DRAGGABLE_TYPE}="${dragType}"]`
+        );
+
+        if (!currentList) {
+          return;
+        }
+
+        const targetId = Number(currentList.dataset.id);
+
+        lists.update(lists => {
+          const startIdx = lists.findIndex(list => list.id === startId);
+          const targetIdx = lists.findIndex(list => list.id === targetId);
+          const startEl = document.querySelector(`[data-id="${startId}"]`);
+          const targetEl = document.querySelector(`[data-id="${targetId}"]`);
+
+          if (startIdx < 0 || targetIdx < 0 || !startEl || !targetEl) {
+            return lists;
+          }
+
+          startEl.setAttribute(`data-id`, targetId.toString());
+          targetEl.setAttribute(`data-id`, startId.toString());
+
+          const temp = lists[startIdx];
+          lists[startIdx] = lists[targetIdx];
+          lists[targetIdx] = temp;
+
+          return [...lists];
+        });
+      },
+    }}
+    on:drop
+  >
     {#each $lists as list}
       <List {list} />
     {/each}

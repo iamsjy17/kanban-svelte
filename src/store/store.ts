@@ -37,7 +37,7 @@ function createList() {
         return [..._lists];
       });
     },
-    delete : async (id: number) => {
+    delete: async (id: number) => {
       await deleteList(id);
 
       lists.update(_lists => _lists.filter(list => list.id !== id));

@@ -1,11 +1,12 @@
 <script lang="ts">
   import {List} from '../global';
   import ListHeader from './ListHeader.svelte';
+  import {draggable} from '../Draggable.ts';
 
   export let list: List;
 </script>
 
-<div class="list">
+<div class="list" use:draggable={{type: 'list', id: list.id}}>
   <div class="list-inner">
     <ListHeader title={list.title} id={list.id} />
     <div class="card-container" />
