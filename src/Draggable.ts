@@ -27,7 +27,7 @@ export function draggable(node: HTMLElement, option: DraggableOption) {
     }
 
     const {type} = option;
-    const id = Number(target.dataset.id);
+    const id = Number(target.getAttribute(`data-${type}-id`));
     const data: DragData = {type, id};
 
     event.dataTransfer.setData('text/plain', JSON.stringify(data));
@@ -54,7 +54,7 @@ export function draggable(node: HTMLElement, option: DraggableOption) {
 
   node.draggable = true;
   node.setAttribute(DRAGGABLE_TYPE, option.type);
-  node.setAttribute(`data-id`, option.id.toString());
+  node.setAttribute(`data-${option.type}-id`, option.id.toString());
   node.addEventListener('dragstart', handleDragStart);
   node.addEventListener('dragend', handleDragEnd);
 

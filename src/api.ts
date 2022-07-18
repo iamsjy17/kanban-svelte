@@ -2,9 +2,9 @@ import type {Card, List} from './global';
 
 const API_URL = 'https://jsonplaceholder.typicode.com';
 
-export async function loadLists(page = 1, limit = 5): Promise<List[]> {
+export async function loadLists(page = 1, limit = 5, embed='comments'): Promise<List[]> {
   const response = await fetch(
-    `${API_URL}/posts?_page=${page}&_limit=${limit}`
+    `${API_URL}/posts?_page=${page}&_limit=${limit}&_embed=${embed}`
   );
 
   if (!response.ok) {
@@ -32,12 +32,12 @@ export async function addList(title: string): Promise<List> {
   return response.json() as Promise<List>;
 }
 
-export async function putList(id: number, title: string): Promise<List> {
+export async function patchList(id: number, list: List): Promise<List> {
   const response = await fetch(`${API_URL}/posts/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify({
+      ...list,
       id,
-      title,
     }),
     headers: {
       'Content-type': 'application/json; charset=UTF-8',

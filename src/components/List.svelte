@@ -1,15 +1,24 @@
 <script lang="ts">
   import {List} from '../global';
+  import {onMount} from 'svelte';
+  import {lists} from '../store/store';
+
   import ListHeader from './ListHeader.svelte';
   import {draggable} from '../Draggable.ts';
+  import Card from './Card.svelte';
 
   export let list: List;
+
 </script>
 
 <div class="list" use:draggable={{type: 'list', id: list.id}}>
   <div class="list-inner">
     <ListHeader title={list.title} id={list.id} />
-    <div class="card-container" />
+    <div class="card-container">
+      {#each list.comments as card}
+        <Card {card} />
+      {/each}
+    </div>
     <div class="add-another-card">+ Add a card</div>
   </div>
 </div>
@@ -38,6 +47,11 @@
         color: #5e6c84;
         cursor: pointer;
         border-radius: 4px;
+      }
+      .card-container {
+        overflow-x: hidden;
+        overflow-y: auto;
+        margin-bottom: 10px;
       }
     }
   }

@@ -3,7 +3,7 @@ export interface List {
   id: number;
   title?: string;
   body?: string;
-  comments?: Comment[];
+  comments?: Card[];
 }
 
 export interface Card {

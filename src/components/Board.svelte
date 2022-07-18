@@ -42,20 +42,20 @@
           return;
         }
 
-        const targetId = Number(currentList.dataset.id);
+        const targetId = Number(currentList.getAttribute(`data-${dragType}-id`));
 
         lists.update(lists => {
           const startIdx = lists.findIndex(list => list.id === startId);
           const targetIdx = lists.findIndex(list => list.id === targetId);
-          const startEl = document.querySelector(`[data-id="${startId}"]`);
-          const targetEl = document.querySelector(`[data-id="${targetId}"]`);
+          const startEl = document.querySelector(`[data-${dragType}-id="${startId}"]`);
+          const targetEl = document.querySelector(`[data-${dragType}-id="${targetId}"]`);
 
           if (startIdx < 0 || targetIdx < 0 || !startEl || !targetEl) {
             return lists;
           }
 
-          startEl.setAttribute(`data-id`, targetId.toString());
-          targetEl.setAttribute(`data-id`, startId.toString());
+          startEl.setAttribute(`data-${dragType}-id`, targetId.toString());
+          targetEl.setAttribute(`data-${dragType}-id`, startId.toString());
 
           const temp = lists[startIdx];
           lists[startIdx] = lists[targetIdx];
