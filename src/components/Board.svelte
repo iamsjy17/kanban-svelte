@@ -1,77 +1,89 @@
 <script lang="ts">
   import {onMount} from 'svelte';
+  import {isNumber} from 'lodash-es';
   import List from './List.svelte';
-  import AddListButton from './AddListButton.svelte';
-  import {lists} from '../store/store';
+  import AddButton from './AddButton.svelte';
+  import {lists, cards} from '../store/store';
   import {dropzone, DRAGGABLE_TYPE} from '../Draggable.ts';
-  import {getClosest} from '../util.ts';
+  import {getClosest, getPos} from '../util.ts';
+  import {Wave} from 'svelte-loading-spinners';
 
-  let isEditing = false;
-  let title = '';
-
+  const loadingDelay = 2500; // 일반적인 API 응답을 받는 정도의 delay를 주고 Spinner가 잘 노출되는지 확인하기 위함.
   const dragType = 'list';
-
-  onMount(async () => {
-    await lists.loadLists();
+  let isLoaded = false;
+  $: sortedList = $lists?.sort((a, b) => {
+    return a.pos - b.pos;
   });
 
-  async function addList() {
-    if (!title) {
-      alert('Title을 입력해주세요.');
-      return;
-    }
-
-    isEditing = false;
-    await lists.add(title);
-    title = '';
-  }
+  onMount(async () => {
+    await Promise.all([
+      lists.load(),
+      cards.load(),
+      new Promise(resolve => setTimeout(() => resolve(), loadingDelay)),
+    ]);
+    isLoaded = true;
+  });
 </script>
 
 <div class="board">
-  <div
-    class="list-container dropzone"
-    use:dropzone={{
-      type: dragType,
-      onDrop: (event, startId) => {
-        const currentList = getClosest(
-          event?.target,
-          `[${DRAGGABLE_TYPE}="${dragType}"]`
-        );
-
-        if (!currentList) {
-          return;
-        }
-
-        const targetId = Number(currentList.getAttribute(`data-${dragType}-id`));
-
-        lists.update(lists => {
-          const startIdx = lists.findIndex(list => list.id === startId);
-          const targetIdx = lists.findIndex(list => list.id === targetId);
-          const startEl = document.querySelector(`[data-${dragType}-id="${startId}"]`);
-          const targetEl = document.querySelector(`[data-${dragType}-id="${targetId}"]`);
-
-          if (startIdx < 0 || targetIdx < 0 || !startEl || !targetEl) {
-            return lists;
+  {#if isLoaded}
+    <div
+      class="list-container dropzone"
+      use:dropzone={{
+        type: dragType,
+        onDrop: async (event, type, srcId) => {
+          if (type !== dragType) {
+            return;
           }
 
-          startEl.setAttribute(`data-${dragType}-id`, targetId.toString());
-          targetEl.setAttribute(`data-${dragType}-id`, startId.toString());
+          const destEl = getClosest(
+            event?.target,
+            `[${DRAGGABLE_TYPE}="${dragType}"]`
+          );
 
-          const temp = lists[startIdx];
-          lists[startIdx] = lists[targetIdx];
-          lists[targetIdx] = temp;
+          if (!destEl) {
+            return;
+          }
 
-          return [...lists];
-        });
-      },
-    }}
-    on:drop
-  >
-    {#each $lists as list}
-      <List {list} />
-    {/each}
-  </div>
-  <AddListButton />
+          const srcList = sortedList.find(list => list.id === srcId);
+          const destId = destEl.getAttribute(`data-${dragType}-id`);
+          const destIdx = sortedList.findIndex(list => list.id === destId);
+
+          if (!isNumber(destIdx) || destIdx < 0) {
+            return;
+          }
+
+          const destRect = destEl.getBoundingClientRect();
+          const srcRect = event.target.getBoundingClientRect();
+
+          console.log(destRect.right);
+          console.log(srcRect.right);
+
+          let leftList = sortedList[destIdx];
+          let rightList = sortedList[destIdx + 1];
+
+          // if (srcRect.right < destRect.right) {
+          //   leftList = sortedList[destIdx - 1];
+          //   rightList = sortedList[destIdx];
+          // }
+
+          await lists.edit(srcList.id, {
+            ...srcList,
+            pos: getPos(leftList?.pos, rightList?.pos),
+          });
+        },
+      }}
+    >
+      {#each sortedList as list}
+        <List {list} />
+      {/each}
+    </div>
+    <AddButton type="list" />
+  {:else}
+    <div class="spinner">
+      <Wave size="200" color="#FF3E00" unit="px" />
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -99,5 +111,13 @@
     background: rgba(235, 236, 240, 0.6);
     border-radius: 4px;
     cursor: pointer;
+  }
+  .spinner {
+    min-width: 250px;
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
   }
 </style>
