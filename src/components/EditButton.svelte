@@ -1,34 +1,36 @@
 <script lang="ts">
-  import {lists} from '../store/store';
-  import {isNumber} from 'lodash-es';
+  import {lists, cards} from '../store/store';
+  import {List, Card} from '../global';
 
-  export let title = '';
-  export let id: number;
+  export let type: 'list' | 'card';
+  export let item: List | Card;
+  $: isList = type === 'list';
   let isEditing = false;
+  const store = type === 'list' ? lists : cards;
 
-  async function editList() {
-    if (!title || !isNumber(id)) {
+  async function edit() {
+    if (!item.id || !item.title) {
       return;
     }
 
     isEditing = false;
-    await lists.edit(id, title);
+    await store.edit(item.id, {...item, title: item.title});
   }
 
-  async function deleteList() {
-    if (!isNumber(id)) {
+  async function deleteItem() {
+    if (!item.id) {
       return;
     }
 
     isEditing = false;
-    await lists.delete(id);
+    await store.delete(item.id);
   }
 </script>
 
 <div class="list-header">
   {#if !isEditing}
     <div class="title">
-      {title}
+      {item.title}
       <span
         class="btn small"
         on:click={() => {
@@ -39,11 +41,11 @@
   {:else}
     <div class="edit-mode">
       <textarea
-        placeholder="Enter a title for this list..."
-        bind:value={title}
+        placeholder="Enter a title for this {isList ? 'list' : 'card'}..."
+        bind:value={item.title}
       />
       <div class="actions ">
-        <div class="btn success" on:click={editList}>Save</div>
+        <div class="btn success" on:click={edit}>Save</div>
         <div
           class="btn"
           on:click={() => {
@@ -52,7 +54,7 @@
         >
           Cancel
         </div>
-        <div class="btn danger" on:click={deleteList}>Delete List</div>
+        <div class="btn danger" on:click={deleteItem}>Delete</div>
       </div>
     </div>
   {/if}
