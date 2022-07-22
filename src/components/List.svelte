@@ -7,6 +7,7 @@
   import {cards} from '../store/store';
   import {getClosest, getPos} from '../util.ts';
   import {dropzone, DRAGGABLE_TYPE} from '../Draggable.ts';
+  import {isNumber} from 'lodash-es';
 
   export let list: List;
   const dragType = 'card';
@@ -25,37 +26,32 @@
       class="card-container"
       use:dropzone={{
         type: dragType,
-        onDrop: async (event, type, startId) => {
-          if (type !== dragType) {
-            return;
+        axis: 'vertical',
+   
+        onDrop: async (srcId, destId, dropPosition) => {
+          const srcCard = $cards.find(card => card.id === srcId);
+          const destIdx = cardsInList.findIndex(card => card.id === destId);
+
+          let beforeCard = null;
+          let afterCard = null;
+
+          if (isNumber(destIdx) && destIdx >= 0) {
+            if (dropPosition === 'after') {
+              beforeCard = cardsInList[destIdx];
+              afterCard =
+                destIdx < cardsInList.length - 1
+                  ? cardsInList[destIdx + 1]
+                  : null;
+            } else {
+              beforeCard = destIdx > 0 ? cardsInList[destIdx - 1] : null;
+              afterCard = cardsInList[destIdx];
+            }
           }
-          const currentCard = getClosest(
-            event?.target,
-            `[${DRAGGABLE_TYPE}="${dragType}"]`
-          );
 
-          if (!currentCard) {
-            return;
-          }
-
-          const targetId = currentCard.getAttribute(`data-${dragType}-id`);
-          const startCard = $cards.find(card => card.id === startId);
-          const targetCards = $cards
-            .filter(card => card.listId === list.id)
-            .sort((a, b) => {
-              return a.pos - b.pos;
-            });
-          const targetIdx = targetCards.findIndex(card => card.id === targetId);
-          const targetList = targetCards[targetIdx];
-          const nextList = targetCards[targetIdx + 1];
-
-          // TODO: target 위, 아래에 들어갈지 bound
-          // TODO: 카드에 겹쳐서 올리지 않고 리스트에 넣는 경우 마지막에 붙이기.
-
-          await cards.edit(startId, {
-            ...startCard,
-            listId: targetList.listId,
-            pos: getPos(targetList.pos, nextList?.pos),
+          await cards.edit(srcId, {
+            ...srcCard,
+            listId: list.id,
+            pos: getPos(beforeCard?.pos, afterCard?.pos),
           });
         },
       }}

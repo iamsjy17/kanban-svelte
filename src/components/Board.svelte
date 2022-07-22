@@ -31,45 +31,30 @@
       class="list-container dropzone"
       use:dropzone={{
         type: dragType,
-        onDrop: async (event, type, srcId) => {
-          if (type !== dragType) {
-            return;
-          }
-
-          const destEl = getClosest(
-            event?.target,
-            `[${DRAGGABLE_TYPE}="${dragType}"]`
-          );
-
-          if (!destEl) {
-            return;
-          }
-
+        axis: 'horizontal',
+        onDrop: async (srcId, destId, dropPosition) => {
           const srcList = sortedList.find(list => list.id === srcId);
-          const destId = destEl.getAttribute(`data-${dragType}-id`);
           const destIdx = sortedList.findIndex(list => list.id === destId);
 
-          if (!isNumber(destIdx) || destIdx < 0) {
-            return;
+          let beforeList = null;
+          let afterList = null;
+
+          if (isNumber(destIdx) && destIdx >= 0) {
+            if (dropPosition === 'after') {
+              beforeList = sortedList[destIdx];
+              afterList =
+                destIdx < sortedList.length - 1
+                  ? sortedList[destIdx + 1]
+                  : null;
+            } else {
+              beforeList = destIdx > 0 ? sortedList[destIdx - 1] : null;
+              afterList = sortedList[destIdx];
+            }
           }
-
-          const destRect = destEl.getBoundingClientRect();
-          const srcRect = event.target.getBoundingClientRect();
-
-          console.log(destRect.right);
-          console.log(srcRect.right);
-
-          let leftList = sortedList[destIdx];
-          let rightList = sortedList[destIdx + 1];
-
-          // if (srcRect.right < destRect.right) {
-          //   leftList = sortedList[destIdx - 1];
-          //   rightList = sortedList[destIdx];
-          // }
 
           await lists.edit(srcList.id, {
             ...srcList,
-            pos: getPos(leftList?.pos, rightList?.pos),
+            pos: getPos(beforeList?.pos, afterList?.pos),
           });
         },
       }}
