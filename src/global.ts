@@ -1,15 +1,13 @@
 export interface List {
-  userId: number;
-  id: number;
-  title?: string;
-  body?: string;
-  comments?: Card[];
+  id: string;
+  pos: number;
+  title: string;
 }
 
 export interface Card {
-  postId: number;
-  id: number;
-  name?: string;
-  email?: string;
-  body?: string;
+  id: string;
+  listId: string;
+  pos: number;
+  name: string;
+  color?: string;
 }

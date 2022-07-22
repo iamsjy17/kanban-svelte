@@ -1,29 +1,40 @@
-import type {List} from '../global';
+import type {List, Card} from '../global';
 import {writable} from 'svelte/store';
-import {addList, putList, loadLists, deleteList} from '../api';
+import {
+  addList,
+  putList,
+  loadLists,
+  deleteList,
+  loadCards,
+  addCard,
+  putCard,
+  deleteCard,
+} from '../api';
 
-export const lists = createList();
+export const lists = createLists();
+export const cards = createCards();
 
-function createList() {
-  const list = [] as List[];
-  const {subscribe, set, update} = writable(list);
+// TODO: createList, createCard 중복 코드 제거. 제네릭으로 만들기
+function createLists() {
+  const _lists = [] as List[];
+  const {subscribe, set, update} = writable(_lists);
 
   return {
     subscribe,
     set,
     update,
-    loadLists: async () => {
-      const list = await loadLists();
+    load: async () => {
+      const _lists = await loadLists();
 
-      lists.set(list);
+      lists.set(_lists);
     },
-    add: async (title: string) => {
-      const addedList = await addList(title);
+    add: async (list: List) => {
+      const addedList = await addList(list);
 
       lists.update(_lists => [..._lists, addedList]);
     },
-    edit: async (id: number, title: string) => {
-      const editedList = await putList(id, title);
+    edit: async (id: string, list: List) => {
+      const editedList = await putList(id, list);
 
       lists.update(_lists => {
         const listIdx = _lists.findIndex(list => editedList?.id === list.id);
@@ -37,10 +48,51 @@ function createList() {
         return [..._lists];
       });
     },
-    delete: async (id: number) => {
+    delete: async (id: string) => {
       await deleteList(id);
 
       lists.update(_lists => _lists.filter(list => list.id !== id));
+    },
+  };
+}
+
+function createCards() {
+  const _cards = [] as Card[];
+  const {subscribe, set, update} = writable(_cards);
+
+  return {
+    subscribe,
+    set,
+    update,
+    load: async () => {
+      const _cards = await loadCards();
+
+      cards.set(_cards);
+    },
+    add: async (card: Card) => {
+      const addedCard = await addCard(card);
+
+      cards.update(_cards => [..._cards, addedCard]);
+    },
+    edit: async (id: string, card: Card) => {
+      const editedCard = await putCard(id, card);
+
+      cards.update(_cards => {
+        const cardIdx = _cards.findIndex(card => editedCard?.id === card.id);
+
+        if (cardIdx < 0) {
+          return _cards;
+        }
+
+        _cards[cardIdx] = editedCard;
+
+        return [..._cards];
+      });
+    },
+    delete: async (id: string) => {
+      await deleteCard(id);
+
+      cards.update(_cards => _cards.filter(card => card.id !== id));
     },
   };
 }
