@@ -1,16 +1,38 @@
 <script lang="ts">
-  import {lists} from '../store/store';
+  import {lists, cards} from '../store/store';
+  import {v4 as uuidv4} from 'uuid';
+  import {getPos} from '../util.ts';
 
+  export let type: 'list' | 'card';
+  export let listId: string;
+  $: isList = type === 'list';
   let isEditing = false;
   let title = '';
 
-  async function addList() {
-    if (!title) {
+  async function add() {
+    if (!title || !type) {
       return;
     }
 
+    const id = uuidv4();
+
     isEditing = false;
-    await lists.add(title);
+
+    const store = type === 'list' ? lists : cards;
+    const values = type === 'list' ? $lists : $cards;
+    const leftPos = values.length > 0 ? values[values.length - 1]?.pos : 0;
+    const data = {
+      id,
+      title,
+      pos: getPos(leftPos),
+    };
+
+    if (!isList && listId) {
+      Object.assign(data, {listId});
+    }
+
+    await store.add(data);
+
     title = '';
   }
 </script>
@@ -22,7 +44,7 @@
   }}
 >
   {#if !isEditing}
-    + Add another List
+    + Add {isList ? 'List' : 'Card'}
   {:else}
     <div class="edit-mode">
       <textarea
@@ -30,9 +52,7 @@
         bind:value={title}
       />
       <div class="actions">
-        <div class="btn success" on:click|stopPropagation={addList}>
-          Add List
-        </div>
+        <div class="btn success" on:click|stopPropagation={add}>Add</div>
         <div
           class="btn"
           on:click|stopPropagation={() => {
