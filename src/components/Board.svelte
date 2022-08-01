@@ -7,9 +7,9 @@
   import {dropzone, DRAGGABLE_TYPE} from '../Draggable.ts';
   import {getClosest, getPos} from '../util.ts';
   import {Wave} from 'svelte-loading-spinners';
+  import {flip} from 'svelte/animate';
 
   const loadingDelay = 2500; // 일반적인 API 응답을 받는 정도의 delay를 주고 Spinner가 잘 노출되는지 확인하기 위함.
-  const dragType = 'list';
   let isLoaded = false;
   $: sortedList = $lists?.sort((a, b) => {
     return a.pos - b.pos;
@@ -25,12 +25,19 @@
   });
 </script>
 
-<div class="board">
+<div
+  class="board"
+  use:dropzone={{
+    type: 'card',
+    axis: 'vertical',
+    onDrop: async srcId => await cards.delete(srcId),
+  }}
+>
   {#if isLoaded}
     <div
       class="list-container dropzone"
       use:dropzone={{
-        type: dragType,
+        type: 'list',
         axis: 'horizontal',
         onDrop: async (srcId, destId, dropPosition) => {
           const srcList = sortedList.find(list => list.id === srcId);
@@ -59,8 +66,10 @@
         },
       }}
     >
-      {#each sortedList as list}
-        <List {list} />
+      {#each sortedList as list (list.id)}
+        <div class="list-wrapper" animate:flip>
+          <List {list} />
+        </div>
       {/each}
     </div>
     <AddButton type="list" />
@@ -83,6 +92,10 @@
   }
 
   .list-container {
+    display: inline-block;
+  }
+
+  .list-wrapper {
     display: inline-block;
   }
 

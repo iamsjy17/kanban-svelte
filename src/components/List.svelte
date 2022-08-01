@@ -8,6 +8,9 @@
   import {getClosest, getPos} from '../util.ts';
   import {dropzone, DRAGGABLE_TYPE} from '../Draggable.ts';
   import {isNumber} from 'lodash-es';
+  import {flip} from 'svelte/animate';
+  import {quintOut} from 'svelte/easing';
+  import {crossfade} from 'svelte/transition';
 
   export let list: List;
   const dragType = 'card';
@@ -17,6 +20,23 @@
     .sort((a, b) => {
       return a.pos - b.pos;
     });
+
+  const [send, receive] = crossfade({
+    duration: d => Math.sqrt(d * 200),
+    fallback(node, params) {
+      const style = getComputedStyle(node);
+      const transform = style.transform === 'none' ? '' : style.transform;
+
+      return {
+        duration: 600,
+        easing: quintOut,
+        css: t => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`,
+      };
+    },
+  });
 </script>
 
 <div class="list" data-list-id={list.id} use:draggable={{type: 'list'}}>
@@ -27,7 +47,6 @@
       use:dropzone={{
         type: dragType,
         axis: 'vertical',
-   
         onDrop: async (srcId, destId, dropPosition) => {
           const srcCard = $cards.find(card => card.id === srcId);
           const destIdx = cardsInList.findIndex(card => card.id === destId);
@@ -56,8 +75,10 @@
         },
       }}
     >
-      {#each cardsInList as card}
-        <Card {card} />
+      {#each cardsInList as card (card.id)}
+        <div in:receive={{key: card.id}} out:send={{key: card.id}} animate:flip>
+          <Card {card} />
+        </div>
       {/each}
     </div>
     <AddButton type="card" listId={list.id} />
@@ -95,7 +116,7 @@
         margin-bottom: 10px;
         border: solid;
         border-width: 1px;
-        border-color: cornflowerblue;
+        border-color: gray;
         padding: 5px;
       }
     }
