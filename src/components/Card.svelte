@@ -14,6 +14,10 @@
   .card {
     margin-bottom: 8px;
 
+    &:hover {
+      background: lightgray;
+    }
+
     .title {
       position: relative;
       border-radius: 4px;

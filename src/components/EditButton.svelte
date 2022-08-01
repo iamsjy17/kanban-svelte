@@ -58,7 +58,6 @@
       </div>
     </div>
   {/if}
-  <p class="card-num">0 cards</p>
 </div>
 
 <style lang="scss">

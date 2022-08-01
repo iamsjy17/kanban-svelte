@@ -127,6 +127,8 @@ export function dropzone(node: HTMLElement, option: DropZoneOption) {
       return;
     }
 
+    event.stopPropagation();
+
     if (onDrop) {
       const destEl = getClosest(
         event?.target as HTMLElement,
@@ -164,7 +166,7 @@ export function dropzone(node: HTMLElement, option: DropZoneOption) {
   node.addEventListener('dragenter', handleDragEnter, true);
   node.addEventListener('dragleave', handleDragLeave, true);
   node.addEventListener('dragover', handleDragOver, true);
-  node.addEventListener('drop', handleDrop, true);
+  node.addEventListener('drop', handleDrop);
 
   return {
     destroy() {

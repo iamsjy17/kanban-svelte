@@ -2,7 +2,7 @@
   import {lists, cards} from '../store/store';
   import {v4 as uuidv4} from 'uuid';
   import {getPos} from '../util.ts';
-
+  import {dropzone} from '../Draggable.ts';
   export let type: 'list' | 'card';
   export let listId: string;
   $: isList = type === 'list';
@@ -44,7 +44,23 @@
   }}
 >
   {#if !isEditing}
-    + Add {isList ? 'List' : 'Card'}
+    <div
+      use:dropzone={{
+        type: 'card',
+        axis: 'vertical',
+        onDrop:  srcId => {
+          if(isList){
+            return;
+          }
+
+          const srcCard = $cards.find(card => card.id === srcId);
+          isEditing = true;
+          title = srcCard.title;
+        },
+      }}
+    >
+      + Add {isList ? 'List' : 'Card'}
+    </div>
   {:else}
     <div class="edit-mode">
       <textarea
@@ -74,8 +90,12 @@
     width: 250px;
     margin: 0 4px;
     padding: 10px 8px;
-    background: rgba(235, 236, 240, 0.6);
+    background: #e2e6ea;
     border-radius: 4px;
     cursor: pointer;
+
+    &:hover {
+      background: darken(#e2e6ea, 10%);
+    }
   }
 </style>
