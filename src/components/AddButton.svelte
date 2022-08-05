@@ -48,8 +48,8 @@
       use:dropzone={{
         type: 'card',
         axis: 'vertical',
-        onDrop:  srcId => {
-          if(isList){
+        onDrop: srcId => {
+          if (isList) {
             return;
           }
 

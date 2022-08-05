@@ -4,18 +4,32 @@
   import EditButton from './EditButton.svelte';
 
   export let card: Card;
+  let isEditing = false;
 </script>
 
-<div class="card" data-card-id={card.id} use:draggable={{type: 'card'}}>
-  <EditButton item={card} type="card" />
+<div
+  class="card {!isEditing ? 'normal' : ''}"
+  data-card-id={card.id}
+  use:draggable={{type: 'card'}}
+>
+  <div class="card-color-bar" style="background-color: {card.color}">
+    <span class="card-color-bar" />
+  </div>
+  <EditButton item={card} type="card" bind:isEditing />
 </div>
 
 <style lang="scss">
   .card {
     margin-bottom: 8px;
 
-    &:hover {
-      background: lightgray;
+    .card-color-bar {
+      height: 8px;
+      margin: 0 4px 4px 0;
+      max-width: 40px;
+      min-width: 40px;
+      padding: 0;
+      width: auto;
+      cursor: pointer;
     }
 
     .title {
@@ -31,6 +45,11 @@
         top: 6px;
         right: 8px;
       }
+    }
+  }
+  .card.normal {
+    &:hover {
+      background: lightgray;
     }
   }
 </style>

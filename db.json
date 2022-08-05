@@ -3,67 +3,54 @@
     {
       "id": "457ffcd9-3c3e-464c-ab88-43e2401b4f0a",
       "title": "TODO",
-      "pos": 1130478.75
+      "pos": 1130446.2504959106
     },
     {
       "id": "6b82bea5-e0b5-46e2-b3c6-74f4cfbc3f70",
       "title": "DOING",
-      "pos": 1097711.25
+      "pos": 1146830.0004959106
     },
     {
       "id": "5c57e43c-d8e0-4e3f-81b1-bd77b0a10b43",
       "title": "DONE",
-      "pos": 1064943.75
+      "pos": 1179597.5004959106
     }
   ],
   "cards": [
     {
-      "id": "fd6ce896-2750-46dc-aeec-4da81ab27b0b",
-      "listId": "457ffcd9-3c3e-464c-ab88-43e2401b4f0a",
-      "title": "밥먹기",
-      "pos": 557047.5
-    },
-    {
-      "id": "9e2fd095-dd1f-4d00-94b9-c6e397ba17ae",
-      "listId": "457ffcd9-3c3e-464c-ab88-43e2401b4f0a",
-      "title": "잠자기",
-      "pos": 352250.625
-    },
-    {
-      "id": "f163903c-051a-4365-9366-9f08b85e8930",
-      "listId": "6b82bea5-e0b5-46e2-b3c6-74f4cfbc3f70",
-      "title": "놀기",
-      "pos": 720885
-    },
-    {
       "id": "1aa82a9b-b96b-4011-9ca4-e96ba2c11b83",
       "title": "카드 CRUD",
-      "pos": 421881.5625,
-      "listId": "457ffcd9-3c3e-464c-ab88-43e2401b4f0a"
+      "pos": 198140.9765625,
+      "listId": "457ffcd9-3c3e-464c-ab88-43e2401b4f0a",
+      "color": "red"
     },
     {
-      "id": "9271da08-a8bf-47c0-9bed-0953b03e5bbd",
-      "title": "카드 드래그",
-      "pos": 655350,
-      "listId": "6b82bea5-e0b5-46e2-b3c6-74f4cfbc3f70"
+      "id": "a4696dde-335f-4e22-90e0-23c30689dc15",
+      "title": "넷플릭스",
+      "pos": 32767.5,
+      "listId": "6b82bea5-e0b5-46e2-b3c6-74f4cfbc3f70",
+      "color": "skyblue"
     },
     {
-      "id": "d55edcb0-1940-4a26-bafb-0457d6741212",
-      "title": "스터디",
-      "pos": 786420,
-      "listId": "5c57e43c-d8e0-4e3f-81b1-bd77b0a10b43"
+      "id": "2e1dcbc0-663e-46bb-af2b-abc6dd8fa117",
+      "title": "잠자기",
+      "pos": 65535,
+      "listId": "5c57e43c-d8e0-4e3f-81b1-bd77b0a10b43",
+      "color": "green"
     },
     {
-      "id": "5e7bb853-3b37-4f60-a35c-3c9a9dd9e9f5",
-      "title": "샌박 배포",
-      "pos": 655350,
-      "listId": "5c57e43c-d8e0-4e3f-81b1-bd77b0a10b43"
+      "id": "b734ab37-fe39-42ab-9be9-4428c6b79a02",
+      "title": "넷플릭스",
+      "pos": 132605.9765625,
+      "listId": "457ffcd9-3c3e-464c-ab88-43e2401b4f0a",
+      "color": "orange"
     },
     {
-      "id": "6d8f602b-c0e8-4399-a193-862a89b4d414",
-      "title": "34243",
-      "pos": 786420,
-      "listId": "6b82bea5-e0b5-46e2-b3c6-74f4cfbc3f70"
+      "id": "14438708-949e-45e8-8f26-160a0eac03e5",
+      "title": "3221231",
+      "pos": 198140.9765625,
+      "listId": "6b82bea5-e0b5-46e2-b3c6-74f4cfbc3f70",
+      "color": "lime"
     }
   ]
 }
