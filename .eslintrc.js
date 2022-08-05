@@ -28,7 +28,13 @@ module.exports = {
       // See https://github.com/sveltejs/eslint-plugin-svelte3/issues/70
       'svelte3/ignore-styles': () => true
     },
-    rules: {'@typescript-eslint/no-unsafe-call': 0}
+    rules: {
+      '@typescript-eslint/no-unsafe-call': 0, 
+      '@typescript-eslint/no-unsafe-assignment': 0, 
+      '@typescript-eslint/restrict-template-expressions':0, 
+      '@typescript-eslint/no-unsafe-member-access': 0,
+      '@typescript-eslint/no-unsafe-argument': 0
+    }
 ,    
     plugins: ['svelte3', '@typescript-eslint'],
     ignorePatterns: ['node_modules']
